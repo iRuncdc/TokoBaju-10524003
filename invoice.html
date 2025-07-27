@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice Transaksi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-image: url(src/bg.png);
+      background-position: center;
+    }
+    .invoice-container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 1px dashed #ccc;
+    }
+    .invoice-header {
+      text-align: center;
+      border-bottom: 2px dashed #ccc;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+    .invoice-header h2 {
+      font-weight: 600;
+      margin: 0;
+    }
+    .invoice-content p {
+      margin: 6px 0;
+      font-size: 15px;
+    }
+    .label {
+      font-weight: 600;
+    }
+    .total {
+      font-size: 18px;
+      font-weight: 600;
+      color: #28a745;
+      border-top: 2px dashed #ccc;
+      margin-top: 20px;
+      padding-top: 10px;
+    }
+    .btn-back {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="invoice-container">
+  <div class="invoice-header">
+    <h2>STRUK PEMBELIAN</h2>
+    <small>★ Toko Baju Premium ★</small>
+  </div>
+  <div id="invoiceContent" class="invoice-content"></div>
+  
+  <div class="text-center btn-back">
+    <button onclick="kembali()" class="btn btn-dark rounded-pill px-4">Kembali ke Toko</button>
+  </div>
+</div>
+
+<script>
+  const data = JSON.parse(localStorage.getItem("invoiceTerakhir"));
+
+  if (!data) {
+    document.getElementById("invoiceContent").innerHTML = "<p class='text-danger'>Transaksi tidak ditemukan.</p>";
+  } else {
+    document.getElementById("invoiceContent").innerHTML = `
+      <p><span class="label">Nama Pembeli:</span> ${data.namaPembeli}</p>
+      <p><span class="label">Nama Barang:</span> ${data.namaBarang}</p>
+      <p><span class="label">Ukuran:</span> ${data.ukuran || '-'}</p>
+      <p><span class="label">Jumlah:</span> ${data.jumlah}</p>
+      <p><span class="label">Harga Satuan:</span> Rp${data.harga.toLocaleString()}</p>
+      <p><span class="label">No HP:</span> ${data.noHp}</p>
+      <p><span class="label">Lokasi Pengiriman:</span> ${data.lokasi}</p>
+      <p><span class="label">Metode Pembayaran:</span> ${data.metode}</p>
+      <p><span class="label">Tanggal Transaksi:</span> ${data.tanggal}</p>
+      
+      <p class="total">Total Bayar: Rp${data.total.toLocaleString()}</p>
+    `;
+  }
+
+  function kembali() {
+    window.location.href = "home.html";
+  }
+</script>
+
+</body>
+</html>

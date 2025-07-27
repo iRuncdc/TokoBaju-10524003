@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Halaman Pembeli - Toko Baju</title>
+  <link rel="icon" href="src/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-image: url(src/bg.png);
+      background-position: center;
+    }
+
+    .topbar {
+      background: linear-gradient(to right, #00a859, #007e4f);
+      color: white;
+      padding: 20px 30px 60px;
+      border-bottom-left-radius: 50% 10%;
+      border-bottom-right-radius: 50% 10%;
+      position: relative;
+    }
+
+    .topbar .title {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .topbar .logout-btn {
+      background-color: white;
+      color: #000000;
+      border: none;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+
+    .product-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      padding: 15px;
+      transition: 0.3s;
+    }
+
+    .product-card:hover {
+      transform: scale(1.02);
+    }
+
+    .product-image {
+      height: 160px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+    .marquee {
+      background: linear-gradient(to right, #00a859, #007e4f);
+      color: white;
+      padding: 40px;
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .marquee-text {
+      display: inline-block;
+      white-space: nowrap;
+      animation: slideText 12s linear infinite;
+      position: relative;
+    }
+
+    @keyframes slideText {
+      from {
+        transform: translateX(100%);
+      }
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar d-flex justify-content-between align-items-center">
+  <div class="title">Toko Baju</div>
+  <div>
+    <span>Hi <span id="username" class="me-3"></span></span>
+    <button onclick="logout()" class="logout-btn">Logout</button>
+  </div>
+</div>
+  <!-- Marquee Banner -->
+  <div class="container my-4">
+    <div class="marquee">
+      <div class="marquee-text">🌟Selamat Datang di Toko Baju Online🌟</div>
+    </div>
+  </div>
+  
+
+<!-- Daftar Produk -->
+<div class="container">
+  <h5 class="mb-4 fw-bold">Produk Tersedia</h5>
+  <div class="row" id="produkList"></div>
+</div>
+
+<footer class="bg-light text-dark mt-5 pt-5 pb-3 border-top shadow-sm">
+  <div class="container">
+    <div class="row">
+      <!-- Brand -->
+      <div class="col-md-3 mb-4">
+        <h5 class="fw-bold text-success">Toko Baju</h5>
+        <p class="small text-muted">Belanja Fashion Online Terpercaya</p>
+      </div>
+
+      <!-- Tentang -->
+      <div class="col-md-3 mb-4">
+        <h6 class="fw-bold mb-3">Tentang</h6>
+        <ul class="list-unstyled">
+          <li><a href="about.html" class="text-muted text-decoration-none">Tentang Kami</a></li>
+        </ul>
+      </div>
+
+      <!-- Sosial Media -->
+      <div class="col-md-3 mb-4">
+        <h6 class="fw-bold mb-3">Ikuti Kami</h6>
+        <div class="d-flex gap-2">
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/733/733547.png" alt="Facebook"></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/733/733558.png" alt="Instagram"></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/733/733579.png" alt="Twitter"></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/2111/2111463.png" alt="YouTube"></a>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Copyright -->
+    <div class="text-center small text-muted">
+      © 2025 10524003-Harun
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Tampilkan nama user dari localStorage
+  const user = JSON.parse(localStorage.getItem("userLogin"));
+  document.getElementById("username").textContent = user?.username || "Pengunjung";
+
+  // Fungsi logout
+  function logout() {
+    localStorage.removeItem("userLogin");
+    window.location.href = "index.html";
+  }
+
+  // Ambil dan tampilkan barang
+  const produkList = document.getElementById("produkList");
+
+  function getBarang() {
+    return JSON.parse(localStorage.getItem('barangList') || '[]');
+  }
+
+  function tampilkanBarang() {
+    const barangList = getBarang();
+    produkList.innerHTML = "";
+
+    barangList.forEach((barang) => {
+      if (barang.jumlah > 0) {
+        const col = document.createElement('div');
+        col.className = 'col-md-3';
+
+        col.innerHTML = `
+          <div class="product-card h-100">
+            <img src="${barang.foto}" class="img-fluid alt="Produk"  product-image w-100 mb-10" alt="${barang.nama}">
+            <h5>${barang.nama}</h5>
+            <p>Harga: <strong>Rp${Number(barang.harga).toLocaleString()}</strong></p>
+            <p class="text-muted">Stok: ${barang.jumlah}</p>
+            <button class="btn btn-success w-100" onclick="beliBarang(${barang.id})">Beli</button>
+          </div>
+        `;
+
+        produkList.appendChild(col);
+      }
+    });
+  }
+
+  // Arahkan ke transaksi
+  function beliBarang(id) {
+    const barangList = getBarang();
+    const barang = barangList.find(item => item.id === id);
+    if (!barang) return;
+
+    localStorage.setItem('barangDibeli', JSON.stringify(barang));
+    window.location.href = "transaksi.html";
+  }
+
+  tampilkanBarang();
+
+</script>
+
+</body>
+</html>
